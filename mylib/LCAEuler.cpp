@@ -23,7 +23,6 @@ void dfs(int v, int parent) {
         if(to!= parent){
             dfs(to,v);
         }
-
     }
     tout[v] = ++timer;
 }

@@ -4,66 +4,70 @@
 
 using namespace std;
 
-int a[12][12];
-int b[12][12];
-
-void turn(int k) {
-    for (int i = 0; i < 10; i++) {
-        b[k][i] = 1 - b[k][i];
+int board[10];
+int tmp[10];
+int n = 10;
+void init() {
+    for (int i = 0; i < n; i++) {
+        tmp[i] = board[i];
     }
 }
 
-pair<bool, int> solve(){
-    int t = 0;
-    for(int j=0; j<10;j++){
-        int cnt = 1;
-        for(int i=1; i<10;i++){
-            if(b[i-1][j] == b[i][j]) cnt++;
-        }
-        if(cnt !=10){
-            return {false, 0};
-        }
-        if(b[0][j] == 0) t++;   
+void push(int x, int y) {
+    int pos = n - y - 1;
+    tmp[x] ^= (1 << pos);
+    if (x - 1 >= 0)
+        tmp[x - 1] ^= (1 << pos);
+    if (x + 1 < n)
+        tmp[x + 1] ^= (1 << pos);
+    if (y - 1 >= 0)
+        tmp[x] ^= (1 << (pos + 1));
+    if (y + 1 < n) {
+        tmp[x] ^= (1 << (pos - 1));
     }
-    return {true, t};
 }
 
+bool isAnser() {
+    for (int i = 0; i < n; i++) {
+        if (tmp[i] != 0)
+            return false;
+    }
+    return true;
+}
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
     cout.tie(0);
-
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            char t;
-            cin >> t;
-            if (t == 'O')
-                a[i][j] = 0;
-            else
-                a[i][j] = 1;
+    for (int i = 0; i < n; i++) {
+        for (int j = n-1; j >=0; j--) {
+            char c;
+            cin >> c;
+            if (c != '#') {
+                board[i] |= (1 << j);
+            }
         }
     }
     int answer = -1;
-    for (int i = 0; i < 1024; i++) {
-        for (int j = 0; j < 10; j++) {
-            for (int k = 0; k < 10; k++) {
-                b[j][k] = a[j][k];
-            }
-        }
+    for (int i = 0; i < (1 << n); i++) {
+        init();
         int cnt = 0;
-
-        for (int j = 0; j < 10; j++) {
+        for (int j = 0; j < n; j++) {
             if (i & (1 << j)) {
-                turn(j);
+                push(0, j);
                 cnt++;
             }
         }
-        auto tmp = solve();
-
-        if(!tmp.first) continue;
-        if (answer == -1 || answer > tmp.second+cnt) {
-            answer = tmp.second+cnt;
+        for (int j = 1; j < n; j++) {
+            for (int k = 0; k < n; k++) {
+                if (tmp[j - 1] & (1 << (n-k-1))) {
+                    push(j, k);
+                    cnt++;
+                }
+            }
+        }
+        if (!tmp[n-1] && (answer == -1 || answer > cnt)) {
+            answer = cnt;
         }
     }
-    cout << answer<<'\n';
+    cout << answer << '\n';
 }

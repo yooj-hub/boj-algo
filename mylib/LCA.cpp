@@ -1,4 +1,4 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -30,36 +30,42 @@ void make_table() {
 }
 
 int lca(int u, int v) {
-    if (depth[u] < depth[v]) swap(u, v);
-    int
-    diff = depth[u] - depth[v];
+    if (depth[u] < depth[v])
+        swap(u, v);
+    int diff = depth[u] - depth[v];
     for (int i = 0; diff; i++) {
-        if (diff & 1) u = dp[u][i];
+        if (diff & 1)
+            u = dp[u][i];
         diff >>= 1;
     }
-    if (u == v) return u;
+    if (u == v)
+        return u;
     for (int i = 29; i >= 0; i--) {
-        if (dp[u][i] != dp[v][i])u = dp[u][i], v = dp[v][i];
+        if (dp[u][i] != dp[v][i])
+            u = dp[u][i], v = dp[v][i];
     }
     return dp[u][0];
-
 }
 
-
-int main(){
-    ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     cin >> n;
-    for(int i=0; i<n-1; i++){
-        int a, b; cin >> a >> b;
+    for (int i = 0; i < n - 1; i++) {
+        int a, b;
+        cin >> a >> b;
         g[a].push_back(b);
         g[b].push_back(a);
     }
     dfs(1, 0);
     make_table();
 
-    int m; cin >> m;
-    while(m--){
-        int a, b; cin >> a >> b;
+    int m;
+    cin >> m;
+    while (m--) {
+        int a, b;
+        cin >> a >> b;
         cout << lca(a, b) << "\n";
     }
 }
