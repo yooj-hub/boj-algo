@@ -31,14 +31,14 @@ ll init2(int node, int start, int end) {
     return tree2[node] = max(left, left + right);
 }
 
-ll query1(int node, int start, int end, int left, int right) {
+ll sum_query(int node, int start, int end, int left, int right) {
     if (start > right || left > end)
         return 0LL;
     if (left <= start && end <= right) {
-        return tree1[node];
+        return tree[node];
     }
-    return query1(node * 2, start, (start + end) / 2, left, right) +
-           query1(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
+    return sum_query(node * 2, start, (start + end) / 2, left, right) +
+           sum_query(node * 2 + 1, (start + end) / 2 + 1, end, left, right);
 }
 
 ll query2(int node, int start, int end, int left, int right) {
