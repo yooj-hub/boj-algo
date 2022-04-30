@@ -18,4 +18,5 @@ for i in range(n-1):
 mx = tmp[0]
 for i in range(1, len(tmp)):
     mx = gcd(mx, tmp[i])
+    
 print(mx)
