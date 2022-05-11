@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
-#define ll long long int
 #define all(x) x.begin(), x.end()
 #define MX 101010
 
 using namespace std;
+typedef long long int ll;
 int n, t;
 int b = 1;
 int arr[MX];
