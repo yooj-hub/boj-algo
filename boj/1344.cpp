@@ -5,69 +5,61 @@
 
 using namespace std;
 
+long double d[19][19][19];
+bitset<19> isPrime;
 int a, b;
-float a_base, inv_a_base;
-float b_base, inv_b_base;
-float ap[19];
-float bp[19];
-const ll mod = 1e9+7;
-int comb[19][19];
+long double ap, bp;
 
-void make_comb() {
-    for (int i = 0; i <= 18; i++) {
-        comb[i][0] = 1;
-        comb[i][i] = 1;
-        for (int j = 1; j < i; j++) {
-            comb[i][j] = comb[i - 1][j] + comb[i - 1][j - 1];
-        }
-    }
-}
-
-long double pw(ll x, int y) {
-    ll ret = 1.0;
-    int cnt = 2 * y;
-    while (y) {
-        if (y & 1)
-            ret *= x;
-            if(ret > mod){
-                ret %= mod;
-                cnt -= 10;
-            }
-        x *= x;
-        y >>= 1;
-    }
+long double go(int idx, int aw, int bw) {
+    if (idx < aw || idx < bw || aw < 0 || bw < 0)
+        return 0;
+    if (d[idx][aw][bw] != -1.0)
+        return d[idx][aw][bw];
+    long double &ret = d[idx][aw][bw];
+    ret = 0.0;
+    ret += (1.0 - ap) * (1.0 - bp) * go(idx - 1, aw, bw);
+    ret += ap * (1.0 - bp) * go(idx - 1, aw - 1, bw);
+    ret += ap * bp * go(idx - 1, aw - 1, bw - 1);
+    ret += (1.0 - ap) * bp * go(idx - 1, aw, bw - 1);
     return ret;
 }
 
-bitset<19> isPrime;
-
-int main() {
-    cin >> a >> b;
-    a_base = a;
-    b_base = b;
-    inv_a_base = 100 - a;
-    inv_b_base = 100 - b;
-    make_comb();
-    for (int i = 0; i <= 18; i++) {
-        ap[i] = pw(inv_a_base, 18 - i) * pw(a_base, i) * (float)comb[18][i];
-        bp[i] = pw(inv_b_base, 18 - i) * pw(b_base, i) * (float)comb[18][i];
-    }
-    float ret = 1.0;
+void make_isPrime() {
+    isPrime[0] = 1;
+    isPrime[1] = 1;
     for (int i = 4; i <= 18; i += 2)
         isPrime[i] = 1;
     for (int i = 3; i * i <= 18; i += 2) {
         if (isPrime[i])
             continue;
-        for (int k = i * i; k <= 18; k += i) {
-            isPrime[k] = 1;
+        for (int x = i * i; x <= 18; x += i) {
+            isPrime[x] = 1;
         }
     }
+}
+void init() {
+    ap = (long double)a * 0.01;
+    bp = (long double)b * 0.01;
+
+    for (int i = 0; i < 19; i++) {
+        for (int j = 0; j < 19; j++) {
+            fill(d[i][j], d[i][j] + 19, -1.0);
+        }
+    }
+}
+
+int main() {
+    make_isPrime();
+    cin >> a >> b;
+    init();
+    long double ans = 1.0;
+    d[0][0][0] = 1.0;
     for (int i = 0; i <= 18; i++) {
         for (int j = 0; j <= 18; j++) {
             if (isPrime[i] && isPrime[j]) {
-                ret -= ap[j] * bp[i];
+                ans -= go(18, i, j);
             }
         }
     }
-    printf("%f", ret);
+    printf("%.10Lf", ans);
 }
