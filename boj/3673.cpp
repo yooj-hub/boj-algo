@@ -4,8 +4,7 @@
 #define MX 101010
 
 using namespace std;
-int t, d, n;
-int x;
+int t, d, n, x;
 int s[50001];
 ll cnt[1000001];
 int main() {
