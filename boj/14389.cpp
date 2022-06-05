@@ -26,7 +26,7 @@ int go(int idx, int state) {
     if (board[i][j] == '1') {
         return ans = go(idx + 1, state >> 1) + 1;
     }
-    ans = go(idx+1, state>>1);
+    ans = go(idx + 1, state >> 1);
     if ((state & 1) == 0) {
         ans = max(ans, go(idx + 1, state >> 1) + 1);
     }
