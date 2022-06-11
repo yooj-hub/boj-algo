@@ -30,9 +30,7 @@ void union_parent(int a, int b) {
     if (color_set[a].size() > color_set[b].size())
         swap(a, b);
     parent[a] = b;
-    for (auto iter = color_set[a].begin(); iter != color_set[a].end(); iter++) {
-        color_set[b].insert(*iter);
-    }
+    color_set[b].insert(color_set[a].begin(), color_set[a].end());
 }
 
 int main() {
