@@ -1,14 +1,14 @@
 #include <bits/stdc++.h>
 #define ll long long int
 #define all(x) x.begin(), x.end()
-#define MX 101010
+#define MX 1010
 
 using namespace std;
 
 int n, m;
 int a[101];
 int b[101];
-int c[202][202];
+int d[202][202];
 int s = 0;
 int e = 201;
 int bias = 100;
@@ -27,31 +27,30 @@ int main() {
     int answer = 0;
     for (int i = 1; i <= n; i++) {
         cin >> a[i];
-        cap[s][i] = a[i];
-        g[s].push_back(i);
-        g[i].push_back(s);
+        cap[i+bias][e] = a[i];
+        g[e].push_back(i+bias);
+        g[i+bias].push_back(e);
     }
     for (int i = 1; i <= m; i++) {
-        int t;
-        cin >> t;
 
-        g[i + bias].push_back(e);
-        g[e].push_back(i + bias);
-        cap[i + bias][e] = t;
+        cin >> b[i];
+        g[i].push_back(s);
+        g[s].push_back(i);
+        cap[s][i] = b[i];
     }
     
-    for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= m; j++) {
-            cap[i][j + bias] = a[i];
-            g[i].push_back(j + bias);
-            g[j + bias].push_back(i);
-        }
-    }
     for (int i = 1; i <= m; i++) {
         for (int j = 1; j <= n; j++) {
-            cin >> c[i + bias][j];
+            cap[i][j + bias] = b[i];
+            g[i].push_back(j + bias);
+            g[j + bias].push_back(i);
+            int t;
+            cin >> t;
+            d[i][j+bias]=t;
+            d[j+bias][i]=-t;
         }
     }
+    
     while (true) {
         memset(par, -1, sizeof(par));
         fill(dist, dist + 202, inf);
@@ -66,8 +65,8 @@ int main() {
             q.pop();
             for (auto nxt : g[cur]) {
                 if (cap[cur][nxt] - flow[cur][nxt] > 0 &&
-                    dist[nxt] > dist[cur] + c[nxt][cur]) {
-                    dist[nxt] = dist[cur] + c[nxt][cur];
+                    dist[nxt] > dist[cur] + d[cur][nxt]) {
+                    dist[nxt] = dist[cur] + d[cur][nxt];
                     par[nxt] = cur;
                     if (!inq[nxt]) {
                         q.push(nxt);
@@ -83,11 +82,10 @@ int main() {
             cost = min(cost, cap[par[i]][i] - flow[par[i]][i]);
         }
         for (int i = e; i != s; i = par[i]) {
+            answer+= cost * d[par[i]][i];
             flow[par[i]][i] += cost;
             flow[i][par[i]] -= cost;
         }
-        answer += cost * dist[e];
-        cout << dist[e] << ' ' << cost << ' ' << par[e] - 100 << endl;
     }
     cout << answer;
 }
