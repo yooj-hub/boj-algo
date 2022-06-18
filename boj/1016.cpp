@@ -14,7 +14,7 @@ int main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     cin >> mn >> mx;
-    int sz = mx-mn+1;
+    int sz = mx - mn + 1;
     isPrime.resize(sz, true);
     memset(isp, true, sizeof(isp));
     for (int i = 2; i <= 1000000; i++)
@@ -36,7 +36,7 @@ int main()
         ll start = (mn / pv) * pv;
         if (start < mn)
             start += pv;
-        
+
         while (start <= mx)
         {
             isPrime[start - mn] = false;
@@ -44,8 +44,10 @@ int main()
         }
     }
     ll answer = 0;
-    for(int i=0; i<isPrime.size(); i++){
-        if(isPrime[i]) answer++;
+    for (int i = 0; i < isPrime.size(); i++)
+    {
+        if (isPrime[i])
+            answer++;
     }
     cout << answer << '\n';
 }
