@@ -36,10 +36,10 @@ int main() {
     cin >> n >> k;
     for(int i=1; i<=n; i++){
         cin >> arr[i];
-        update(1,0,65537,arr[i],1);
+        update(1,0,sz,arr[i],1);
         if(i<k) continue;
-        ans += query(1,0,65537,(k+1)/2);
-        update(1,0,65537,arr[i-k+1],-1);
+        ans += query(1,0,sz,(k+1)/2);
+        update(1,0,sz,arr[i-k+1],-1);
     }
     cout << ans;
 }
