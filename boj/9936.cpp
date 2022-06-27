@@ -6,7 +6,7 @@
 using namespace std;
 int n, k;
 
-ll arr[1000 * 3];
+int arr[1000 * 3];
 ll d[3000][1000][(1 << 3)];
 
 const ll inf = 2e10 + 7;
